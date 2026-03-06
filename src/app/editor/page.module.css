@@ -1,9 +1,11 @@
 .layout {
     display: flex;
+    align-items: center;
     height: 100vh;
     overflow: hidden;
     position: relative;
     z-index: 1;
+    padding-top: 56px;
 }
 
 /* ── Sidebar ─────────────────────────────────────────── */
@@ -22,10 +24,9 @@
     gap: 10px;
     overflow-y: auto;
     z-index: 10;
-    margin: 72px 0 16px 16px;
+    margin: 0 0 0 16px;
     box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
-    align-self: flex-start;
-    max-height: calc(100vh - 88px);
+    max-height: calc(100vh - 90px);
 }
 
 /* scrollbar */
