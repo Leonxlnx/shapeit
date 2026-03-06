@@ -158,7 +158,6 @@ export default function EditorPage() {
 
     return (
         <>
-            <div className="dither-bg" />
             <Navbar />
             <div className={styles.layout}>
                 <aside className={styles.sidebar}>

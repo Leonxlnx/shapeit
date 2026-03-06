@@ -5,7 +5,6 @@ import styles from './page.module.css';
 export default function Home() {
   return (
     <>
-      <div className="dither-bg" />
       <Navbar />
       <main className={styles.main}>
         <div className={styles.hero}>
@@ -33,9 +32,7 @@ export default function Home() {
         </div>
 
         <footer className={styles.footer}>
-          <span>Built with Next.js</span>
-          <span className={styles.dot}>·</span>
-          <span>Monochrome Design</span>
+          <span>built by <a href="https://x.com/lexnlin" target="_blank" rel="noopener noreferrer" className={styles.xLink}>x.com/lexnlin</a></span>
         </footer>
       </main>
     </>
