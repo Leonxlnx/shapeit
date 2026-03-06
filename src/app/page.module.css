@@ -1,0 +1,199 @@
+.main {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 100px 40px 60px;
+  gap: 60px;
+}
+
+/* Hero */
+.hero {
+  text-align: center;
+  max-width: 640px;
+}
+
+.badge {
+  display: inline-block;
+  background: var(--bg-panel);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-full);
+  padding: 6px 18px;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  color: var(--cyan);
+  margin-bottom: 24px;
+}
+
+.title {
+  font-size: clamp(48px, 8vw, 80px);
+  font-weight: 900;
+  line-height: 1;
+  letter-spacing: -2px;
+  margin-bottom: 20px;
+}
+
+.subtitle {
+  font-size: 16px;
+  line-height: 1.7;
+  color: var(--text-secondary);
+  max-width: 480px;
+  margin: 0 auto;
+}
+
+/* Tool Grid */
+.toolGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  width: 100%;
+  max-width: 900px;
+}
+
+.toolCard {
+  background: var(--bg-panel);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-xl);
+  overflow: hidden;
+  text-decoration: none;
+  color: inherit;
+  transition: all 0.4s var(--ease-smooth);
+  position: relative;
+  cursor: pointer;
+}
+
+.toolCard:hover {
+  border-color: var(--border-hover);
+  box-shadow: var(--shadow-xl);
+  transform: translateY(-8px);
+}
+
+.toolCard:hover .toolArrow {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+/* Tool Preview Area */
+.toolPreview {
+  height: 200px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--bg-deep);
+  border-bottom: 1px solid var(--border);
+  overflow: hidden;
+  position: relative;
+}
+
+.toolPreview::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 50% 100%, rgba(0, 212, 255, 0.05), transparent 70%);
+  pointer-events: none;
+}
+
+/* Mini Card Stack */
+.cardStack {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  height: 80px;
+}
+
+.miniCard {
+  width: 50px;
+  height: 72px;
+  border-radius: 10px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.6);
+  position: absolute;
+  transition: transform 0.5s var(--ease-spring);
+}
+
+.toolCard:hover .miniCard {
+  filter: brightness(1.1);
+}
+
+/* Shape Preview */
+.shapePreview {
+  width: 120px;
+  height: 120px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.shapeSvg {
+  width: 100%;
+  height: 100%;
+  filter: drop-shadow(0 10px 20px rgba(0, 212, 255, 0.2));
+  transition: transform 0.5s var(--ease-spring);
+}
+
+.toolCard:hover .shapeSvg {
+  transform: rotate(15deg) scale(1.1);
+}
+
+/* Tool Info */
+.toolInfo {
+  padding: 24px;
+}
+
+.toolTitle {
+  font-size: 18px;
+  font-weight: 700;
+  margin-bottom: 8px;
+  letter-spacing: -0.5px;
+}
+
+.toolDesc {
+  font-size: 13px;
+  line-height: 1.6;
+  color: var(--text-secondary);
+  margin-bottom: 16px;
+}
+
+.toolTags {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.tag {
+  background: var(--bg-deep);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-full);
+  padding: 4px 12px;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-muted);
+  letter-spacing: 0.5px;
+}
+
+.toolArrow {
+  position: absolute;
+  top: 24px;
+  right: 24px;
+  font-size: 20px;
+  color: var(--cyan);
+  opacity: 0;
+  transform: translateX(-8px);
+  transition: all 0.3s var(--ease-smooth);
+}
+
+/* Footer */
+.footer {
+  font-size: 12px;
+  color: var(--text-muted);
+  letter-spacing: 1px;
+}
+
+@media (max-width: 768px) {
+  .toolGrid {
+    grid-template-columns: 1fr;
+  }
+}

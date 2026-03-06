@@ -1,0 +1,113 @@
+.layout {
+    display: flex;
+    height: 100vh;
+    overflow: hidden;
+}
+
+/* Sidebar */
+.sidebar {
+    width: 340px;
+    min-width: 340px;
+    background: var(--bg-panel);
+    border-right: 1px solid var(--border);
+    padding: 90px 24px 30px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    overflow-y: auto;
+    box-shadow: 5px 0 20px rgba(0, 0, 0, 0.3);
+    z-index: 10;
+}
+
+.sidebarTitle {
+    font-size: 18px;
+    font-weight: 800;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-bottom: 4px;
+}
+
+.group {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    background: rgba(255, 255, 255, 0.015);
+    padding: 16px;
+    border-radius: var(--radius-md);
+    border: 1px solid var(--border);
+}
+
+.colorRow {
+    display: flex;
+    gap: 8px;
+}
+
+/* Download Button */
+.downloadBtn {
+    background: linear-gradient(135deg, var(--cyan), var(--cyan-dark));
+    color: var(--bg-deep);
+    border: none;
+    padding: 16px;
+    border-radius: var(--radius-md);
+    font-size: 14px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    cursor: pointer;
+    transition: all 0.3s var(--ease-smooth);
+    margin-top: 8px;
+    box-shadow: 0 4px 16px rgba(0, 212, 255, 0.2);
+    font-family: inherit;
+}
+
+.downloadBtn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 30px rgba(0, 212, 255, 0.35);
+}
+
+.downloadBtn:active {
+    transform: translateY(-1px);
+}
+
+/* Preview Area */
+.preview {
+    flex-grow: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-image:
+        linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+    background-size: 30px 30px;
+    background-color: var(--bg-deep);
+    position: relative;
+}
+
+.preview::after {
+    content: '';
+    position: absolute;
+    width: 600px;
+    height: 600px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(0, 212, 255, 0.04), transparent 70%);
+    pointer-events: none;
+}
+
+.canvasWrapper {
+    position: relative;
+    padding: 24px;
+    background: var(--bg-panel);
+    border-radius: var(--radius-xl);
+    box-shadow: var(--shadow-xl);
+    border: 1px solid var(--border);
+}
+
+.canvas {
+    background: var(--bg-deep);
+    border-radius: var(--radius-lg);
+    box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.5);
+    border: 1px solid var(--border);
+    width: 500px;
+    height: 500px;
+    display: block;
+}
