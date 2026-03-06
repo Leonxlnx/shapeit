@@ -134,64 +134,6 @@ input[type="range"]::-webkit-slider-thumb:hover {
   transform: scale(1.15);
 }
 
-/* Select — Monochrome */
-select {
-  width: 100%;
-  background: var(--bg-input);
-  border: 1px solid var(--border);
-  color: var(--white);
-  padding: 11px 14px;
-  border-radius: var(--radius-sm);
-  outline: none;
-  font-family: inherit;
-  font-size: 13px;
-  font-weight: 500;
-  cursor: pointer;
-  transition: border-color var(--t-fast);
-}
+/* Select — hidden, custom component used */
 
-select:focus {
-  border-color: var(--border-strong);
-}
-
-/* Color Input */
-input[type="color"] {
-  -webkit-appearance: none;
-  appearance: none;
-  border: none;
-  width: 100%;
-  height: 40px;
-  border-radius: var(--radius-sm);
-  cursor: pointer;
-  padding: 0;
-  background: none;
-}
-
-input[type="color"]::-webkit-color-swatch-wrapper {
-  padding: 0;
-}
-
-input[type="color"]::-webkit-color-swatch {
-  border: 2px solid var(--gray-700);
-  border-radius: var(--radius-sm);
-}
-
-/* Control Label */
-.control-label {
-  font-size: 10px;
-  color: var(--gray-400);
-  text-transform: uppercase;
-  letter-spacing: 1.8px;
-  font-weight: 700;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.control-label span {
-  color: var(--gray-200);
-  font-size: 12px;
-  font-weight: 500;
-  letter-spacing: 0;
-  font-variant-numeric: tabular-nums;
-}
+/* Color Input — hidden, custom component used */

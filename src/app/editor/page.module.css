@@ -6,13 +6,13 @@
     z-index: 1;
 }
 
-/* Sidebar */
+/* ── Sidebar ─────────────────────────────────────────── */
 .sidebar {
     width: 300px;
     min-width: 300px;
     background: var(--bg-panel);
     border-right: 1px solid var(--border);
-    padding: 20px;
+    padding: 18px;
     padding-top: 72px;
     display: flex;
     flex-direction: column;
@@ -39,7 +39,7 @@
     font-weight: 500;
 }
 
-/* Section groups */
+/* ── Sections ────────────────────────────────────────── */
 .section {
     display: flex;
     flex-direction: column;
@@ -50,14 +50,225 @@
     border: 1px solid var(--border);
 }
 
-/* Color grid */
+/* ── Labels ──────────────────────────────────────────── */
+.label {
+    font-size: 10px;
+    color: var(--gray-400);
+    text-transform: uppercase;
+    letter-spacing: 1.8px;
+    font-weight: 700;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.label span {
+    color: var(--gray-200);
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0;
+    font-variant-numeric: tabular-nums;
+}
+
+/* ── Custom Select Dropdown ──────────────────────────── */
+.customSelect {
+    position: relative;
+    width: 100%;
+}
+
+.selectTrigger {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--bg-input);
+    border: 1px solid var(--border);
+    color: var(--white);
+    padding: 10px 12px;
+    border-radius: 12px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-family: inherit;
+    text-align: left;
+}
+
+.selectTrigger:hover {
+    border-color: var(--border-hover);
+    background: var(--bg-surface);
+}
+
+.selectIcon {
+    font-size: 14px;
+    width: 20px;
+    text-align: center;
+    opacity: 0.7;
+}
+
+.selectChevron {
+    margin-left: auto;
+    transition: transform 0.2s ease;
+    opacity: 0.5;
+}
+
+.selectChevronOpen {
+    transform: rotate(180deg);
+}
+
+.selectMenu {
+    position: absolute;
+    top: calc(100% + 4px);
+    left: 0;
+    right: 0;
+    background: var(--bg-surface);
+    border: 1px solid var(--border-hover);
+    border-radius: 12px;
+    padding: 4px;
+    z-index: 100;
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.6);
+    animation: dropIn 0.15s ease;
+}
+
+@keyframes dropIn {
+    from {
+        opacity: 0;
+        transform: translateY(-4px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.selectOption {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    width: 100%;
+    padding: 9px 12px;
+    border: none;
+    background: none;
+    color: var(--gray-300);
+    font-size: 13px;
+    font-weight: 500;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    font-family: inherit;
+    text-align: left;
+}
+
+.selectOption:hover {
+    background: var(--bg-elevated);
+    color: var(--white);
+}
+
+.selectOptionActive {
+    background: var(--white) !important;
+    color: var(--black) !important;
+    font-weight: 700;
+}
+
+/* ── Custom Color Picker ─────────────────────────────── */
 .colorGrid {
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
     gap: 6px;
 }
 
-/* Download Button */
+.colorPicker {
+    position: relative;
+}
+
+.colorSwatch {
+    width: 100%;
+    aspect-ratio: 1;
+    border-radius: 10px;
+    border: 2px solid var(--border);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.colorSwatch:hover {
+    border-color: var(--border-strong);
+    transform: scale(1.05);
+}
+
+.colorPopover {
+    position: absolute;
+    bottom: calc(100% + 8px);
+    left: 50%;
+    transform: translateX(-50%);
+    width: 200px;
+    background: var(--bg-surface);
+    border: 1px solid var(--border-hover);
+    border-radius: 14px;
+    padding: 12px;
+    z-index: 200;
+    box-shadow: 0 16px 48px rgba(0, 0, 0, 0.7);
+    animation: popIn 0.15s ease;
+}
+
+@keyframes popIn {
+    from {
+        opacity: 0;
+        transform: translateX(-50%) translateY(4px) scale(0.95);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateX(-50%) translateY(0) scale(1);
+    }
+}
+
+.colorPresets {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 4px;
+    margin-bottom: 10px;
+}
+
+.presetDot {
+    width: 100%;
+    aspect-ratio: 1;
+    border-radius: 6px;
+    border: 2px solid transparent;
+    cursor: pointer;
+    transition: all 0.15s ease;
+}
+
+.presetDot:hover {
+    transform: scale(1.15);
+}
+
+.presetDotActive {
+    border-color: var(--white);
+    box-shadow: 0 0 0 1px var(--black), 0 0 0 3px var(--white);
+}
+
+.hexInput {
+    width: 100%;
+    background: var(--bg-input);
+    border: 1px solid var(--border);
+    color: var(--white);
+    padding: 7px 10px;
+    border-radius: 8px;
+    font-size: 12px;
+    font-family: 'SF Mono', 'Consolas', monospace;
+    font-weight: 500;
+    outline: none;
+    transition: border-color 0.2s ease;
+}
+
+.hexInput:focus {
+    border-color: var(--border-strong);
+}
+
+/* ── Download Button ─────────────────────────────────── */
 .downloadBtn {
     background: var(--white);
     color: var(--black);
@@ -69,7 +280,7 @@
     text-transform: uppercase;
     letter-spacing: 2px;
     cursor: pointer;
-    transition: all 0.25s var(--ease);
+    transition: all 0.25s ease;
     margin-top: 6px;
     box-shadow: var(--shadow-md);
     flex-shrink: 0;
@@ -84,7 +295,7 @@
     transform: translateY(-1px);
 }
 
-/* Preview Area */
+/* ── Preview Area ────────────────────────────────────── */
 .preview {
     flex-grow: 1;
     display: flex;
@@ -95,13 +306,12 @@
     overflow: hidden;
 }
 
-/* Subtle dot pattern */
 .preview::before {
     content: '';
     position: absolute;
     inset: 0;
     background-image:
-        radial-gradient(circle, rgba(255, 255, 255, 0.025) 1px, transparent 1px);
+        radial-gradient(circle, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
     background-size: 24px 24px;
     pointer-events: none;
 }

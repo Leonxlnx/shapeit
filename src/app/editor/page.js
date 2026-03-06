@@ -4,11 +4,19 @@ import Navbar from '../components/Navbar';
 import styles from './page.module.css';
 
 const SHAPES = [
-    { value: 'star', label: 'Star' },
-    { value: 'polygon', label: 'Polygon' },
-    { value: 'circle', label: 'Circle' },
-    { value: 'square', label: 'Rounded Square' },
-    { value: 'flower', label: 'Flower' },
+    { value: 'star', label: 'Star', icon: '✦' },
+    { value: 'polygon', label: 'Polygon', icon: '⬡' },
+    { value: 'circle', label: 'Circle', icon: '●' },
+    { value: 'flower', label: 'Flower', icon: '✿' },
+    { value: 'ring', label: 'Ring', icon: '◎' },
+    { value: 'cross', label: 'Cross', icon: '✚' },
+    { value: 'spiral', label: 'Spiral', icon: '◌' },
+];
+
+const PRESETS = [
+    '#ffffff', '#cccccc', '#999999', '#666666',
+    '#333333', '#000000', '#ff3b30', '#ff9500',
+    '#ffcc00', '#34c759', '#007aff', '#af52de',
 ];
 
 function drawStar(ctx, cx, cy, spikes, outerRadius, innerRadius) {
@@ -48,6 +56,133 @@ function drawPolygon(ctx, cx, cy, sides, radius) {
     ctx.closePath();
 }
 
+function drawRing(ctx, cx, cy, outerR, innerR) {
+    ctx.beginPath();
+    ctx.arc(cx, cy, outerR, 0, Math.PI * 2);
+    ctx.arc(cx, cy, innerR, Math.PI * 2, 0, true);
+    ctx.closePath();
+}
+
+function drawCross(ctx, cx, cy, size, thickness) {
+    const t = size * thickness;
+    ctx.beginPath();
+    ctx.moveTo(cx - t, cy - size);
+    ctx.lineTo(cx + t, cy - size);
+    ctx.lineTo(cx + t, cy - t);
+    ctx.lineTo(cx + size, cy - t);
+    ctx.lineTo(cx + size, cy + t);
+    ctx.lineTo(cx + t, cy + t);
+    ctx.lineTo(cx + t, cy + size);
+    ctx.lineTo(cx - t, cy + size);
+    ctx.lineTo(cx - t, cy + t);
+    ctx.lineTo(cx - size, cy + t);
+    ctx.lineTo(cx - size, cy - t);
+    ctx.lineTo(cx - t, cy - t);
+    ctx.closePath();
+}
+
+function drawSpiral(ctx, cx, cy, radius, spoke) {
+    ctx.beginPath();
+    const loops = 3 + spoke * 5;
+    const points = 600;
+    for (let i = 0; i <= points; i++) {
+        const t = i / points;
+        const angle = t * loops * Math.PI * 2;
+        const r = t * radius;
+        const thickness = (1 - t * 0.4) * radius * 0.12;
+        const x = cx + Math.cos(angle) * r;
+        const y = cy + Math.sin(angle) * r;
+        if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+    }
+    for (let i = points; i >= 0; i--) {
+        const t = i / points;
+        const angle = t * loops * Math.PI * 2;
+        const r = t * radius + (1 - t * 0.4) * radius * 0.12;
+        const x = cx + Math.cos(angle) * r;
+        const y = cy + Math.sin(angle) * r;
+        ctx.lineTo(x, y);
+    }
+    ctx.closePath();
+}
+
+/* ── Custom Dropdown ────────────────────────────────────── */
+function CustomSelect({ value, options, onChange }) {
+    const [open, setOpen] = useState(false);
+    const ref = useRef(null);
+    const current = options.find(o => o.value === value);
+
+    useEffect(() => {
+        const handler = (e) => { if (ref.current && !ref.current.contains(e.target)) setOpen(false); };
+        document.addEventListener('mousedown', handler);
+        return () => document.removeEventListener('mousedown', handler);
+    }, []);
+
+    return (
+        <div className={styles.customSelect} ref={ref}>
+            <button className={styles.selectTrigger} onClick={() => setOpen(!open)}>
+                <span className={styles.selectIcon}>{current?.icon}</span>
+                <span>{current?.label}</span>
+                <svg className={`${styles.selectChevron} ${open ? styles.selectChevronOpen : ''}`} width="12" height="12" viewBox="0 0 12 12" fill="none">
+                    <path d="M3 4.5L6 7.5L9 4.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
+            </button>
+            {open && (
+                <div className={styles.selectMenu}>
+                    {options.map(opt => (
+                        <button key={opt.value} className={`${styles.selectOption} ${opt.value === value ? styles.selectOptionActive : ''}`}
+                            onClick={() => { onChange(opt.value); setOpen(false); }}>
+                            <span className={styles.selectIcon}>{opt.icon}</span>
+                            {opt.label}
+                        </button>
+                    ))}
+                </div>
+            )}
+        </div>
+    );
+}
+
+/* ── Custom Color Picker ────────────────────────────────── */
+function ColorPicker({ value, onChange, label }) {
+    const [open, setOpen] = useState(false);
+    const [hex, setHex] = useState(value);
+    const ref = useRef(null);
+
+    useEffect(() => {
+        const handler = (e) => { if (ref.current && !ref.current.contains(e.target)) setOpen(false); };
+        document.addEventListener('mousedown', handler);
+        return () => document.removeEventListener('mousedown', handler);
+    }, []);
+
+    useEffect(() => { setHex(value); }, [value]);
+
+    const handleHex = (v) => {
+        setHex(v);
+        if (/^#[0-9a-fA-F]{6}$/.test(v)) onChange(v);
+    };
+
+    return (
+        <div className={styles.colorPicker} ref={ref}>
+            <button className={styles.colorSwatch} style={{ background: value }} onClick={() => setOpen(!open)}>
+                {label && <span className={styles.colorLabel}>{label}</span>}
+            </button>
+            {open && (
+                <div className={styles.colorPopover}>
+                    <div className={styles.colorPresets}>
+                        {PRESETS.map(c => (
+                            <button key={c} className={`${styles.presetDot} ${c === value ? styles.presetDotActive : ''}`}
+                                style={{ background: c }}
+                                onClick={() => { onChange(c); setHex(c); }} />
+                        ))}
+                    </div>
+                    <input className={styles.hexInput} value={hex} onChange={e => handleHex(e.target.value)}
+                        placeholder="#000000" spellCheck={false} />
+                </div>
+            )}
+        </div>
+    );
+}
+
+/* ── Main Editor ────────────────────────────────────────── */
 export default function EditorPage() {
     const canvasRef = useRef(null);
     const noiseCanvasRef = useRef(null);
@@ -102,13 +237,10 @@ export default function EditorPage() {
             case 'star': drawStar(ctx, 0, 0, corners, sz, sz * spk); break;
             case 'polygon': drawPolygon(ctx, 0, 0, corners, sz); break;
             case 'circle': ctx.beginPath(); ctx.arc(0, 0, sz, 0, Math.PI * 2); break;
-            case 'square': {
-                ctx.beginPath();
-                const r = sz * spk;
-                ctx.roundRect(-sz, -sz, sz * 2, sz * 2, r);
-                break;
-            }
             case 'flower': drawFlower(ctx, 0, 0, sz, corners, sz * spk); break;
+            case 'ring': drawRing(ctx, 0, 0, sz, sz * spk); break;
+            case 'cross': drawCross(ctx, 0, 0, sz, spk * 0.5); break;
+            case 'spiral': drawSpiral(ctx, 0, 0, sz, spk); break;
         }
         ctx.clip();
 
@@ -162,43 +294,41 @@ export default function EditorPage() {
                     </div>
 
                     <section className={styles.section}>
-                        <label className="control-label">Shape</label>
-                        <select value={shape} onChange={e => setShape(e.target.value)}>
-                            {SHAPES.map(s => <option key={s.value} value={s.value}>{s.label}</option>)}
-                        </select>
+                        <label className={styles.label}>Shape</label>
+                        <CustomSelect value={shape} options={SHAPES} onChange={setShape} />
                     </section>
 
                     <section className={styles.section}>
-                        <label className="control-label">Size <span>{size}</span></label>
+                        <label className={styles.label}>Size <span>{size}</span></label>
                         <input type="range" min="50" max="250" value={size} onChange={e => setSize(+e.target.value)} />
 
-                        <label className="control-label">Rotation <span>{rotation}°</span></label>
+                        <label className={styles.label}>Rotation <span>{rotation}°</span></label>
                         <input type="range" min="0" max="360" value={rotation} onChange={e => setRotation(+e.target.value)} />
 
-                        <label className="control-label">Spoke <span>{spoke}%</span></label>
+                        <label className={styles.label}>Spoke <span>{spoke}%</span></label>
                         <input type="range" min="10" max="100" value={spoke} onChange={e => setSpoke(+e.target.value)} />
 
-                        <label className="control-label">Corners <span>{corners}</span></label>
+                        <label className={styles.label}>Corners <span>{corners}</span></label>
                         <input type="range" min="3" max="32" value={corners} onChange={e => setCorners(+e.target.value)} />
                     </section>
 
                     <section className={styles.section}>
-                        <label className="control-label">Colors</label>
+                        <label className={styles.label}>Gradient</label>
                         <div className={styles.colorGrid}>
-                            <input type="color" value={color1} onChange={e => setColor1(e.target.value)} />
-                            <input type="color" value={color2} onChange={e => setColor2(e.target.value)} />
-                            <input type="color" value={color3} onChange={e => setColor3(e.target.value)} />
-                            <input type="color" value={color4} onChange={e => setColor4(e.target.value)} />
+                            <ColorPicker value={color1} onChange={setColor1} />
+                            <ColorPicker value={color2} onChange={setColor2} />
+                            <ColorPicker value={color3} onChange={setColor3} />
+                            <ColorPicker value={color4} onChange={setColor4} />
                         </div>
-                        <label className="control-label">Angle <span>{angle}°</span></label>
+                        <label className={styles.label}>Angle <span>{angle}°</span></label>
                         <input type="range" min="0" max="360" value={angle} onChange={e => setAngle(+e.target.value)} />
                     </section>
 
                     <section className={styles.section}>
-                        <label className="control-label">Grain <span>{noise}%</span></label>
+                        <label className={styles.label}>Grain <span>{noise}%</span></label>
                         <input type="range" min="0" max="100" value={noise} onChange={e => setNoise(+e.target.value)} />
 
-                        <label className="control-label">Contrast <span>{contrast}%</span></label>
+                        <label className={styles.label}>Contrast <span>{contrast}%</span></label>
                         <input type="range" min="0" max="100" value={contrast} onChange={e => setContrast(+e.target.value)} />
                     </section>
 
