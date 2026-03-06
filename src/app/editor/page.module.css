@@ -10,19 +10,41 @@
 .sidebar {
     width: 300px;
     min-width: 300px;
-    background: var(--bg-panel);
-    border-right: 1px solid var(--border);
-    padding: 18px;
-    padding-top: 72px;
+    background: rgba(18, 18, 22, 0.85);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 20px;
+    padding-top: 24px;
     display: flex;
     flex-direction: column;
     gap: 10px;
     overflow-y: auto;
     z-index: 10;
+    margin: 72px 0 16px 16px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+    align-self: flex-start;
+    max-height: calc(100vh - 88px);
+}
+
+/* scrollbar */
+.sidebar::-webkit-scrollbar {
+    width: 4px;
+}
+
+.sidebar::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.sidebar::-webkit-scrollbar-thumb {
+    background: var(--gray-700);
+    border-radius: 4px;
 }
 
 .sidebarHeader {
     margin-bottom: 2px;
+    text-align: center;
 }
 
 .sidebarTitle {
@@ -44,9 +66,9 @@
     display: flex;
     flex-direction: column;
     gap: 8px;
-    padding: 12px;
-    background: var(--bg-elevated);
-    border-radius: var(--radius-md);
+    padding: 14px;
+    background: rgba(255, 255, 255, 0.03);
+    border-radius: 14px;
     border: 1px solid var(--border);
 }
 
@@ -81,10 +103,10 @@
     display: flex;
     align-items: center;
     gap: 8px;
-    background: var(--bg-input);
+    background: rgba(255, 255, 255, 0.05);
     border: 1px solid var(--border);
     color: var(--white);
-    padding: 10px 12px;
+    padding: 10px 14px;
     border-radius: 12px;
     font-size: 13px;
     font-weight: 600;
@@ -96,7 +118,7 @@
 
 .selectTrigger:hover {
     border-color: var(--border-hover);
-    background: var(--bg-surface);
+    background: rgba(255, 255, 255, 0.08);
 }
 
 .selectIcon {
@@ -121,12 +143,14 @@
     top: calc(100% + 4px);
     left: 0;
     right: 0;
-    background: var(--bg-surface);
+    background: rgba(24, 24, 30, 0.95);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
     border: 1px solid var(--border-hover);
-    border-radius: 12px;
+    border-radius: 14px;
     padding: 4px;
     z-index: 100;
-    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.6);
+    box-shadow: 0 16px 48px rgba(0, 0, 0, 0.7);
     animation: dropIn 0.15s ease;
 }
 
@@ -147,13 +171,13 @@
     align-items: center;
     gap: 8px;
     width: 100%;
-    padding: 9px 12px;
+    padding: 9px 14px;
     border: none;
     background: none;
     color: var(--gray-300);
     font-size: 13px;
     font-weight: 500;
-    border-radius: 8px;
+    border-radius: 10px;
     cursor: pointer;
     transition: all 0.15s ease;
     font-family: inherit;
@@ -161,7 +185,7 @@
 }
 
 .selectOption:hover {
-    background: var(--bg-elevated);
+    background: rgba(255, 255, 255, 0.08);
     color: var(--white);
 }
 
@@ -186,7 +210,7 @@
     width: 100%;
     aspect-ratio: 1;
     border-radius: 10px;
-    border: 2px solid var(--border);
+    border: 2px solid rgba(255, 255, 255, 0.08);
     cursor: pointer;
     transition: all 0.2s ease;
     position: relative;
@@ -194,8 +218,8 @@
 }
 
 .colorSwatch:hover {
-    border-color: var(--border-strong);
-    transform: scale(1.05);
+    border-color: rgba(255, 255, 255, 0.2);
+    transform: scale(1.08);
 }
 
 .colorPopover {
@@ -204,9 +228,11 @@
     left: 50%;
     transform: translateX(-50%);
     width: 200px;
-    background: var(--bg-surface);
+    background: rgba(24, 24, 30, 0.95);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
     border: 1px solid var(--border-hover);
-    border-radius: 14px;
+    border-radius: 16px;
     padding: 12px;
     z-index: 200;
     box-shadow: 0 16px 48px rgba(0, 0, 0, 0.7);
@@ -252,11 +278,11 @@
 
 .hexInput {
     width: 100%;
-    background: var(--bg-input);
+    background: rgba(255, 255, 255, 0.05);
     border: 1px solid var(--border);
     color: var(--white);
-    padding: 7px 10px;
-    border-radius: 8px;
+    padding: 8px 10px;
+    border-radius: 10px;
     font-size: 12px;
     font-family: 'SF Mono', 'Consolas', monospace;
     font-weight: 500;
@@ -265,7 +291,7 @@
 }
 
 .hexInput:focus {
-    border-color: var(--border-strong);
+    border-color: rgba(255, 255, 255, 0.3);
 }
 
 /* ── Download Button ─────────────────────────────────── */
@@ -274,21 +300,21 @@
     color: var(--black);
     border: none;
     padding: 14px;
-    border-radius: var(--radius-md);
+    border-radius: 14px;
     font-size: 12px;
     font-weight: 800;
     text-transform: uppercase;
     letter-spacing: 2px;
     cursor: pointer;
     transition: all 0.25s ease;
-    margin-top: 6px;
-    box-shadow: var(--shadow-md);
+    margin-top: 4px;
+    box-shadow: 0 4px 20px rgba(255, 255, 255, 0.06);
     flex-shrink: 0;
 }
 
 .downloadBtn:hover {
     transform: translateY(-2px);
-    box-shadow: 0 10px 30px rgba(255, 255, 255, 0.05);
+    box-shadow: 0 10px 30px rgba(255, 255, 255, 0.08);
 }
 
 .downloadBtn:active {
@@ -311,24 +337,24 @@
     position: absolute;
     inset: 0;
     background-image:
-        radial-gradient(circle, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+        radial-gradient(circle, rgba(255, 255, 255, 0.015) 1px, transparent 1px);
     background-size: 24px 24px;
     pointer-events: none;
 }
 
 .canvasFrame {
     padding: 20px;
-    background: var(--bg-panel);
-    border-radius: var(--radius-xl);
-    box-shadow: var(--shadow-xl);
+    background: rgba(18, 18, 22, 0.6);
+    border-radius: 24px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
     border: 1px solid var(--border);
     position: relative;
 }
 
 .canvas {
     background: var(--bg);
-    border-radius: var(--radius-lg);
-    box-shadow: var(--shadow-inset);
+    border-radius: 18px;
+    box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.5);
     border: 1px solid var(--border);
     width: 520px;
     height: 520px;
