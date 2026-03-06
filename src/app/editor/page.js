@@ -4,14 +4,11 @@ import Navbar from '../components/Navbar';
 import styles from './page.module.css';
 
 const SHAPES = [
-    { value: 'star4', label: '4-Point Sparkle' },
-    { value: 'star5', label: '5-Point Star' },
-    { value: 'star8', label: '8-Point Burst' },
+    { value: 'star', label: 'Star' },
+    { value: 'polygon', label: 'Polygon' },
     { value: 'circle', label: 'Circle' },
     { value: 'square', label: 'Rounded Square' },
     { value: 'flower', label: 'Flower' },
-    { value: 'hexagon', label: 'Hexagon' },
-    { value: 'diamond', label: 'Diamond' },
 ];
 
 function drawStar(ctx, cx, cy, spikes, outerRadius, innerRadius) {
@@ -55,7 +52,8 @@ export default function EditorPage() {
     const canvasRef = useRef(null);
     const noiseCanvasRef = useRef(null);
 
-    const [shape, setShape] = useState('star4');
+    const [shape, setShape] = useState('star');
+    const [corners, setCorners] = useState(4);
     const [size, setSize] = useState(180);
     const [rotation, setRotation] = useState(0);
     const [spoke, setSpoke] = useState(35);
@@ -101,9 +99,8 @@ export default function EditorPage() {
         ctx.rotate(rot);
 
         switch (shape) {
-            case 'star4': drawStar(ctx, 0, 0, 4, sz, sz * spk * 0.5); break;
-            case 'star5': drawStar(ctx, 0, 0, 5, sz, sz * spk); break;
-            case 'star8': drawStar(ctx, 0, 0, 8, sz, sz * spk); break;
+            case 'star': drawStar(ctx, 0, 0, corners, sz, sz * spk); break;
+            case 'polygon': drawPolygon(ctx, 0, 0, corners, sz); break;
             case 'circle': ctx.beginPath(); ctx.arc(0, 0, sz, 0, Math.PI * 2); break;
             case 'square': {
                 ctx.beginPath();
@@ -111,9 +108,7 @@ export default function EditorPage() {
                 ctx.roundRect(-sz, -sz, sz * 2, sz * 2, r);
                 break;
             }
-            case 'flower': drawFlower(ctx, 0, 0, sz, 8, sz * spk); break;
-            case 'hexagon': drawPolygon(ctx, 0, 0, 6, sz); break;
-            case 'diamond': drawPolygon(ctx, 0, 0, 4, sz); break;
+            case 'flower': drawFlower(ctx, 0, 0, sz, corners, sz * spk); break;
         }
         ctx.clip();
 
@@ -136,7 +131,7 @@ export default function EditorPage() {
         }
 
         ctx.restore();
-    }, [shape, size, rotation, spoke, color1, color2, color3, color4, angle, noise, contrast]);
+    }, [shape, size, rotation, spoke, corners, color1, color2, color3, color4, angle, noise, contrast]);
 
     useEffect(() => {
         const nc = document.createElement('canvas');
@@ -147,7 +142,7 @@ export default function EditorPage() {
     }, []);
 
     useEffect(() => { generateNoise(); draw(); }, [contrast, generateNoise, draw]);
-    useEffect(() => { draw(); }, [shape, size, rotation, spoke, color1, color2, color3, color4, angle, noise, draw]);
+    useEffect(() => { draw(); }, [shape, size, rotation, spoke, corners, color1, color2, color3, color4, angle, noise, draw]);
 
     const handleDownload = () => {
         const link = document.createElement('a');
@@ -182,6 +177,9 @@ export default function EditorPage() {
 
                         <label className="control-label">Spoke <span>{spoke}%</span></label>
                         <input type="range" min="10" max="100" value={spoke} onChange={e => setSpoke(+e.target.value)} />
+
+                        <label className="control-label">Corners <span>{corners}</span></label>
+                        <input type="range" min="3" max="32" value={corners} onChange={e => setCorners(+e.target.value)} />
                     </section>
 
                     <section className={styles.section}>
