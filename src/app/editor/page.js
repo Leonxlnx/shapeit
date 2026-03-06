@@ -9,14 +9,14 @@ const SHAPES = [
     { value: 'star8', label: '8-Point Burst' },
     { value: 'circle', label: 'Circle' },
     { value: 'square', label: 'Rounded Square' },
-    { value: 'flower', label: 'Flower / Blob' },
+    { value: 'flower', label: 'Flower' },
     { value: 'hexagon', label: 'Hexagon' },
     { value: 'diamond', label: 'Diamond' },
 ];
 
 function drawStar(ctx, cx, cy, spikes, outerRadius, innerRadius) {
     let rot = Math.PI / 2 * 3;
-    let step = Math.PI / spikes;
+    const step = Math.PI / spikes;
     ctx.beginPath();
     ctx.moveTo(cx, cy - outerRadius);
     for (let i = 0; i < spikes; i++) {
@@ -59,35 +59,32 @@ export default function EditorPage() {
     const [size, setSize] = useState(180);
     const [rotation, setRotation] = useState(0);
     const [spoke, setSpoke] = useState(35);
-    const [color1, setColor1] = useState('#00f2fe');
-    const [color2, setColor2] = useState('#4facfe');
-    const [color3, setColor3] = useState('#ff4d6a');
-    const [color4, setColor4] = useState('#ff6b35');
-    const [angle, setAngle] = useState(45);
-    const [noise, setNoise] = useState(45);
-    const [contrast, setContrast] = useState(70);
+    const [color1, setColor1] = useState('#ffffff');
+    const [color2, setColor2] = useState('#888888');
+    const [color3, setColor3] = useState('#333333');
+    const [color4, setColor4] = useState('#000000');
+    const [angle, setAngle] = useState(135);
+    const [noise, setNoise] = useState(50);
+    const [contrast, setContrast] = useState(65);
 
     const generateNoise = useCallback(() => {
-        const noiseCanvas = noiseCanvasRef.current;
-        if (!noiseCanvas) return;
-        const noiseCtx = noiseCanvas.getContext('2d');
+        const nc = noiseCanvasRef.current;
+        if (!nc) return;
+        const ctx = nc.getContext('2d');
         const c = contrast / 100;
-        const imgData = noiseCtx.createImageData(1000, 1000);
-        const data = imgData.data;
-        for (let i = 0; i < data.length; i += 4) {
+        const imgData = ctx.createImageData(1000, 1000);
+        const d = imgData.data;
+        for (let i = 0; i < d.length; i += 4) {
             const val = (Math.random() - 0.5) * 255 * (c * 2) + 128;
-            data[i] = val;
-            data[i + 1] = val;
-            data[i + 2] = val;
-            data[i + 3] = 255;
+            d[i] = val; d[i + 1] = val; d[i + 2] = val; d[i + 3] = 255;
         }
-        noiseCtx.putImageData(imgData, 0, 0);
+        ctx.putImageData(imgData, 0, 0);
     }, [contrast]);
 
     const draw = useCallback(() => {
         const canvas = canvasRef.current;
-        const noiseCanvas = noiseCanvasRef.current;
-        if (!canvas || !noiseCanvas) return;
+        const nc = noiseCanvasRef.current;
+        if (!canvas || !nc) return;
 
         const ctx = canvas.getContext('2d');
         const w = 1000, h = 1000;
@@ -118,27 +115,24 @@ export default function EditorPage() {
             case 'hexagon': drawPolygon(ctx, 0, 0, 6, sz); break;
             case 'diamond': drawPolygon(ctx, 0, 0, 4, sz); break;
         }
-
         ctx.clip();
 
         const x1 = -Math.cos(ang) * sz;
         const y1 = -Math.sin(ang) * sz;
         const x2 = Math.cos(ang) * sz;
         const y2 = Math.sin(ang) * sz;
-
         const gradient = ctx.createLinearGradient(x1, y1, x2, y2);
         gradient.addColorStop(0, color1);
         gradient.addColorStop(0.33, color2);
         gradient.addColorStop(0.66, color3);
         gradient.addColorStop(1, color4);
-
         ctx.fillStyle = gradient;
         ctx.fill();
 
         if (noiseAlpha > 0) {
             ctx.globalCompositeOperation = 'overlay';
             ctx.globalAlpha = noiseAlpha;
-            ctx.drawImage(noiseCanvas, -cx, -cy);
+            ctx.drawImage(nc, -cx, -cy);
         }
 
         ctx.restore();
@@ -146,8 +140,7 @@ export default function EditorPage() {
 
     useEffect(() => {
         const nc = document.createElement('canvas');
-        nc.width = 1000;
-        nc.height = 1000;
+        nc.width = 1000; nc.height = 1000;
         noiseCanvasRef.current = nc;
         generateNoise();
         draw();
@@ -165,61 +158,60 @@ export default function EditorPage() {
 
     return (
         <>
+            <div className="dither-bg" />
             <Navbar />
             <div className={styles.layout}>
                 <aside className={styles.sidebar}>
-                    <h2 className={styles.sidebarTitle}>
-                        <span className="gradient-text">Shape Editor</span>
-                    </h2>
-
-                    <div className={styles.group}>
-                        <label className="control-label">Shape</label>
-                        <select value={shape} onChange={e => setShape(e.target.value)}>
-                            {SHAPES.map(s => (
-                                <option key={s.value} value={s.value}>{s.label}</option>
-                            ))}
-                        </select>
+                    <div className={styles.sidebarHeader}>
+                        <h2 className={styles.sidebarTitle}>Editor</h2>
+                        <span className={styles.sidebarSub}>craft your shape</span>
                     </div>
 
-                    <div className={styles.group}>
+                    <section className={styles.section}>
+                        <label className="control-label">Shape</label>
+                        <select value={shape} onChange={e => setShape(e.target.value)}>
+                            {SHAPES.map(s => <option key={s.value} value={s.value}>{s.label}</option>)}
+                        </select>
+                    </section>
+
+                    <section className={styles.section}>
                         <label className="control-label">Size <span>{size}</span></label>
                         <input type="range" min="50" max="250" value={size} onChange={e => setSize(+e.target.value)} />
 
                         <label className="control-label">Rotation <span>{rotation}°</span></label>
                         <input type="range" min="0" max="360" value={rotation} onChange={e => setRotation(+e.target.value)} />
 
-                        <label className="control-label">Spokes / Roundness <span>{spoke}%</span></label>
+                        <label className="control-label">Spoke <span>{spoke}%</span></label>
                         <input type="range" min="10" max="100" value={spoke} onChange={e => setSpoke(+e.target.value)} />
-                    </div>
+                    </section>
 
-                    <div className={styles.group}>
-                        <label className="control-label">Gradient Colors</label>
-                        <div className={styles.colorRow}>
+                    <section className={styles.section}>
+                        <label className="control-label">Colors</label>
+                        <div className={styles.colorGrid}>
                             <input type="color" value={color1} onChange={e => setColor1(e.target.value)} />
                             <input type="color" value={color2} onChange={e => setColor2(e.target.value)} />
                             <input type="color" value={color3} onChange={e => setColor3(e.target.value)} />
                             <input type="color" value={color4} onChange={e => setColor4(e.target.value)} />
                         </div>
-
-                        <label className="control-label">Gradient Angle <span>{angle}°</span></label>
+                        <label className="control-label">Angle <span>{angle}°</span></label>
                         <input type="range" min="0" max="360" value={angle} onChange={e => setAngle(+e.target.value)} />
-                    </div>
+                    </section>
 
-                    <div className={styles.group}>
-                        <label className="control-label">Grain / Noise <span>{noise}%</span></label>
+                    <section className={styles.section}>
+                        <label className="control-label">Grain <span>{noise}%</span></label>
                         <input type="range" min="0" max="100" value={noise} onChange={e => setNoise(+e.target.value)} />
 
-                        <label className="control-label">Noise Contrast <span>{contrast}%</span></label>
+                        <label className="control-label">Contrast <span>{contrast}%</span></label>
                         <input type="range" min="0" max="100" value={contrast} onChange={e => setContrast(+e.target.value)} />
-                    </div>
+                    </section>
 
                     <button className={styles.downloadBtn} onClick={handleDownload}>
-                        Download PNG ↓
+                        Export PNG
                     </button>
                 </aside>
 
                 <main className={styles.preview}>
-                    <div className={styles.canvasWrapper}>
+                    <div className={styles.canvasFrame}>
                         <canvas ref={canvasRef} width={1000} height={1000} className={styles.canvas} />
                     </div>
                 </main>

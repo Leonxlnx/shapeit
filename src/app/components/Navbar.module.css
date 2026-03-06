@@ -1,75 +1,58 @@
 .nav {
     position: fixed;
-    top: 20px;
+    top: 16px;
     left: 50%;
     transform: translateX(-50%);
-    background: rgba(17, 17, 24, 0.8);
-    backdrop-filter: blur(24px);
-    -webkit-backdrop-filter: blur(24px);
+    background: rgba(12, 12, 12, 0.75);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
     border: 1px solid var(--border);
     border-radius: var(--radius-full);
-    padding: 6px 8px;
+    padding: 5px 6px;
     display: flex;
     align-items: center;
-    gap: 6px;
+    gap: 4px;
     z-index: 9999;
-    box-shadow: var(--shadow-lg);
+    box-shadow: var(--shadow-md);
 }
 
 .brand {
     display: flex;
     align-items: center;
-    gap: 8px;
-    padding: 8px 16px;
+    padding: 8px 18px;
     text-decoration: none;
-    margin-right: 4px;
-}
-
-.brandIcon {
-    font-size: 18px;
-    color: var(--cyan);
+    margin-right: 2px;
 }
 
 .brandText {
-    font-size: 15px;
+    font-size: 14px;
     font-weight: 800;
-    letter-spacing: 1px;
-    text-transform: uppercase;
-    background: linear-gradient(135deg, var(--cyan), var(--coral));
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
+    letter-spacing: 1.5px;
+    text-transform: lowercase;
+    color: var(--white);
 }
 
 .links {
     display: flex;
-    gap: 4px;
+    gap: 2px;
 }
 
 .link {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    padding: 10px 18px;
+    padding: 8px 18px;
     border-radius: var(--radius-full);
-    font-size: 13px;
+    font-size: 12px;
     font-weight: 600;
-    color: var(--text-secondary);
+    color: var(--gray-400);
     text-decoration: none;
     transition: all 0.2s ease;
-    border: 1px solid transparent;
+    letter-spacing: 0.5px;
 }
 
 .link:hover {
-    color: var(--text-primary);
-    background: rgba(255, 255, 255, 0.04);
+    color: var(--white);
 }
 
 .active {
-    color: var(--bg-deep);
-    background: var(--white) !important;
-    box-shadow: var(--shadow-sm), 0 0 20px rgba(255, 255, 255, 0.1);
-}
-
-.linkIcon {
-    font-size: 12px;
+    color: var(--black) !important;
+    background: var(--white);
 }

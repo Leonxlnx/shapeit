@@ -4,9 +4,8 @@ import Link from 'next/link';
 import styles from './Navbar.module.css';
 
 const navItems = [
-    { href: '/', label: 'Home', icon: '◆' },
-    { href: '/cards', label: 'Card Paths', icon: '❖' },
-    { href: '/editor', label: 'Shape Editor', icon: '✦' },
+    { href: '/', label: 'Home' },
+    { href: '/editor', label: 'Editor' },
 ];
 
 export default function Navbar() {
@@ -15,8 +14,7 @@ export default function Navbar() {
     return (
         <nav className={styles.nav}>
             <Link href="/" className={styles.brand}>
-                <span className={styles.brandIcon}>◈</span>
-                <span className={styles.brandText}>ShapeIt</span>
+                <span className={styles.brandText}>shapeit</span>
             </Link>
 
             <div className={styles.links}>
@@ -26,7 +24,6 @@ export default function Navbar() {
                         href={item.href}
                         className={`${styles.link} ${pathname === item.href ? styles.active : ''}`}
                     >
-                        <span className={styles.linkIcon}>{item.icon}</span>
                         {item.label}
                     </Link>
                 ))}

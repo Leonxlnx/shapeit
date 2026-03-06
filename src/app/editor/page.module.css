@@ -2,67 +2,80 @@
     display: flex;
     height: 100vh;
     overflow: hidden;
+    position: relative;
+    z-index: 1;
 }
 
 /* Sidebar */
 .sidebar {
-    width: 340px;
-    min-width: 340px;
+    width: 310px;
+    min-width: 310px;
     background: var(--bg-panel);
     border-right: 1px solid var(--border);
-    padding: 90px 24px 30px;
+    padding: 90px 20px 28px;
     display: flex;
     flex-direction: column;
-    gap: 16px;
+    gap: 12px;
     overflow-y: auto;
-    box-shadow: 5px 0 20px rgba(0, 0, 0, 0.3);
     z-index: 10;
 }
 
-.sidebarTitle {
-    font-size: 18px;
-    font-weight: 800;
-    letter-spacing: 1px;
-    text-transform: uppercase;
-    margin-bottom: 4px;
+.sidebarHeader {
+    margin-bottom: 6px;
 }
 
-.group {
+.sidebarTitle {
+    font-size: 20px;
+    font-weight: 800;
+    letter-spacing: -0.5px;
+    color: var(--white);
+}
+
+.sidebarSub {
+    font-size: 11px;
+    color: var(--gray-500);
+    letter-spacing: 1px;
+    font-weight: 500;
+}
+
+/* Section groups */
+.section {
     display: flex;
     flex-direction: column;
     gap: 10px;
-    background: rgba(255, 255, 255, 0.015);
-    padding: 16px;
+    padding: 14px;
+    background: var(--bg-elevated);
     border-radius: var(--radius-md);
     border: 1px solid var(--border);
 }
 
-.colorRow {
-    display: flex;
-    gap: 8px;
+/* Color grid */
+.colorGrid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6px;
 }
 
 /* Download Button */
 .downloadBtn {
-    background: linear-gradient(135deg, var(--cyan), var(--cyan-dark));
-    color: var(--bg-deep);
+    background: var(--white);
+    color: var(--black);
     border: none;
-    padding: 16px;
+    padding: 15px;
     border-radius: var(--radius-md);
-    font-size: 14px;
-    font-weight: 700;
+    font-size: 12px;
+    font-weight: 800;
     text-transform: uppercase;
-    letter-spacing: 1px;
+    letter-spacing: 2px;
     cursor: pointer;
-    transition: all 0.3s var(--ease-smooth);
-    margin-top: 8px;
-    box-shadow: 0 4px 16px rgba(0, 212, 255, 0.2);
-    font-family: inherit;
+    transition: all 0.25s var(--ease);
+    margin-top: auto;
+    box-shadow: var(--shadow-md);
 }
 
 .downloadBtn:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 10px 30px rgba(0, 212, 255, 0.35);
+    transform: translateY(-2px);
+    box-shadow: 0 10px 30px rgba(255, 255, 255, 0.05);
 }
 
 .downloadBtn:active {
@@ -75,39 +88,37 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    background-image:
-        linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
-    background-size: 30px 30px;
-    background-color: var(--bg-deep);
+    background: var(--bg);
     position: relative;
+    overflow: hidden;
 }
 
-.preview::after {
+/* Subtle dot pattern */
+.preview::before {
     content: '';
     position: absolute;
-    width: 600px;
-    height: 600px;
-    border-radius: 50%;
-    background: radial-gradient(circle, rgba(0, 212, 255, 0.04), transparent 70%);
+    inset: 0;
+    background-image:
+        radial-gradient(circle, rgba(255, 255, 255, 0.025) 1px, transparent 1px);
+    background-size: 24px 24px;
     pointer-events: none;
 }
 
-.canvasWrapper {
-    position: relative;
-    padding: 24px;
+.canvasFrame {
+    padding: 20px;
     background: var(--bg-panel);
     border-radius: var(--radius-xl);
     box-shadow: var(--shadow-xl);
     border: 1px solid var(--border);
+    position: relative;
 }
 
 .canvas {
-    background: var(--bg-deep);
+    background: var(--bg);
     border-radius: var(--radius-lg);
-    box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.5);
+    box-shadow: var(--shadow-inset);
     border: 1px solid var(--border);
-    width: 500px;
-    height: 500px;
+    width: 520px;
+    height: 520px;
     display: block;
 }
