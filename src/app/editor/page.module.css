@@ -8,24 +8,25 @@
 
 /* Sidebar */
 .sidebar {
-    width: 310px;
-    min-width: 310px;
+    width: 300px;
+    min-width: 300px;
     background: var(--bg-panel);
     border-right: 1px solid var(--border);
-    padding: 90px 20px 28px;
+    padding: 20px;
+    padding-top: 72px;
     display: flex;
     flex-direction: column;
-    gap: 12px;
+    gap: 10px;
     overflow-y: auto;
     z-index: 10;
 }
 
 .sidebarHeader {
-    margin-bottom: 6px;
+    margin-bottom: 2px;
 }
 
 .sidebarTitle {
-    font-size: 20px;
+    font-size: 18px;
     font-weight: 800;
     letter-spacing: -0.5px;
     color: var(--white);
@@ -42,8 +43,8 @@
 .section {
     display: flex;
     flex-direction: column;
-    gap: 10px;
-    padding: 14px;
+    gap: 8px;
+    padding: 12px;
     background: var(--bg-elevated);
     border-radius: var(--radius-md);
     border: 1px solid var(--border);
@@ -61,7 +62,7 @@
     background: var(--white);
     color: var(--black);
     border: none;
-    padding: 15px;
+    padding: 14px;
     border-radius: var(--radius-md);
     font-size: 12px;
     font-weight: 800;
@@ -69,8 +70,9 @@
     letter-spacing: 2px;
     cursor: pointer;
     transition: all 0.25s var(--ease);
-    margin-top: auto;
+    margin-top: 6px;
     box-shadow: var(--shadow-md);
+    flex-shrink: 0;
 }
 
 .downloadBtn:hover {
