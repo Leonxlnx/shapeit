@@ -13,11 +13,7 @@ const SHAPES = [
     { value: 'spiral', label: 'Spiral', icon: '◌' },
 ];
 
-const PRESETS = [
-    '#ffffff', '#cccccc', '#999999', '#666666',
-    '#333333', '#000000', '#ff3b30', '#ff9500',
-    '#ffcc00', '#34c759', '#007aff', '#af52de',
-];
+
 
 function drawStar(ctx, cx, cy, spikes, outerRadius, innerRadius) {
     let rot = Math.PI / 2 * 3;
@@ -141,11 +137,49 @@ function CustomSelect({ value, options, onChange }) {
     );
 }
 
-/* ── Custom Color Picker ────────────────────────────────── */
-function ColorPicker({ value, onChange, label }) {
+/* ── Color helpers ──────────────────────────────────────── */
+function hexToHsb(hex) {
+    const r = parseInt(hex.slice(1, 3), 16) / 255;
+    const g = parseInt(hex.slice(3, 5), 16) / 255;
+    const b = parseInt(hex.slice(5, 7), 16) / 255;
+    const max = Math.max(r, g, b), min = Math.min(r, g, b);
+    const d = max - min;
+    let h = 0;
+    if (d !== 0) {
+        if (max === r) h = ((g - b) / d + 6) % 6;
+        else if (max === g) h = (b - r) / d + 2;
+        else h = (r - g) / d + 4;
+        h *= 60;
+    }
+    const s = max === 0 ? 0 : d / max;
+    return { h, s, b: max };
+}
+
+function hsbToHex(h, s, b) {
+    const c = b * s;
+    const x = c * (1 - Math.abs(((h / 60) % 2) - 1));
+    const m = b - c;
+    let r1, g1, b1;
+    if (h < 60) { r1 = c; g1 = x; b1 = 0; }
+    else if (h < 120) { r1 = x; g1 = c; b1 = 0; }
+    else if (h < 180) { r1 = 0; g1 = c; b1 = x; }
+    else if (h < 240) { r1 = 0; g1 = x; b1 = c; }
+    else if (h < 300) { r1 = x; g1 = 0; b1 = c; }
+    else { r1 = c; g1 = 0; b1 = x; }
+    const toHex = (v) => Math.round((v + m) * 255).toString(16).padStart(2, '0');
+    return `#${toHex(r1)}${toHex(g1)}${toHex(b1)}`;
+}
+
+/* ── Full Spectrum Color Picker ────────────────────────── */
+function ColorPicker({ value, onChange }) {
     const [open, setOpen] = useState(false);
     const [hex, setHex] = useState(value);
+    const [hsb, setHsb] = useState(() => hexToHsb(value));
     const ref = useRef(null);
+    const sbCanvasRef = useRef(null);
+    const hueCanvasRef = useRef(null);
+    const draggingSB = useRef(false);
+    const draggingHue = useRef(false);
 
     useEffect(() => {
         const handler = (e) => { if (ref.current && !ref.current.contains(e.target)) setOpen(false); };
@@ -153,27 +187,103 @@ function ColorPicker({ value, onChange, label }) {
         return () => document.removeEventListener('mousedown', handler);
     }, []);
 
-    useEffect(() => { setHex(value); }, [value]);
+    useEffect(() => { setHex(value); setHsb(hexToHsb(value)); }, [value]);
+
+    // Draw the SB gradient
+    useEffect(() => {
+        if (!open || !sbCanvasRef.current) return;
+        const canvas = sbCanvasRef.current;
+        const ctx = canvas.getContext('2d');
+        const w = canvas.width, h = canvas.height;
+        // Hue base color
+        const hueColor = hsbToHex(hsb.h, 1, 1);
+        // White to hue gradient (horizontal)
+        const gradH = ctx.createLinearGradient(0, 0, w, 0);
+        gradH.addColorStop(0, '#ffffff');
+        gradH.addColorStop(1, hueColor);
+        ctx.fillStyle = gradH;
+        ctx.fillRect(0, 0, w, h);
+        // Black gradient (vertical)
+        const gradV = ctx.createLinearGradient(0, 0, 0, h);
+        gradV.addColorStop(0, 'rgba(0,0,0,0)');
+        gradV.addColorStop(1, '#000000');
+        ctx.fillStyle = gradV;
+        ctx.fillRect(0, 0, w, h);
+    }, [open, hsb.h]);
+
+    // Draw hue strip
+    useEffect(() => {
+        if (!open || !hueCanvasRef.current) return;
+        const canvas = hueCanvasRef.current;
+        const ctx = canvas.getContext('2d');
+        const grad = ctx.createLinearGradient(0, 0, canvas.width, 0);
+        for (let i = 0; i <= 6; i++) {
+            grad.addColorStop(i / 6, hsbToHex(i * 60, 1, 1));
+        }
+        ctx.fillStyle = grad;
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+    }, [open]);
+
+    const updateFromSB = (e) => {
+        const rect = sbCanvasRef.current.getBoundingClientRect();
+        const s = Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width));
+        const b = Math.max(0, Math.min(1, 1 - (e.clientY - rect.top) / rect.height));
+        const newHsb = { ...hsb, s, b };
+        setHsb(newHsb);
+        const newHex = hsbToHex(newHsb.h, newHsb.s, newHsb.b);
+        setHex(newHex);
+        onChange(newHex);
+    };
+
+    const updateFromHue = (e) => {
+        const rect = hueCanvasRef.current.getBoundingClientRect();
+        const h = Math.max(0, Math.min(360, ((e.clientX - rect.left) / rect.width) * 360));
+        const newHsb = { ...hsb, h };
+        setHsb(newHsb);
+        const newHex = hsbToHex(h, newHsb.s, newHsb.b);
+        setHex(newHex);
+        onChange(newHex);
+    };
+
+    useEffect(() => {
+        const onMove = (e) => {
+            if (draggingSB.current) updateFromSB(e);
+            if (draggingHue.current) updateFromHue(e);
+        };
+        const onUp = () => { draggingSB.current = false; draggingHue.current = false; };
+        window.addEventListener('mousemove', onMove);
+        window.addEventListener('mouseup', onUp);
+        return () => { window.removeEventListener('mousemove', onMove); window.removeEventListener('mouseup', onUp); };
+    });
 
     const handleHex = (v) => {
         setHex(v);
-        if (/^#[0-9a-fA-F]{6}$/.test(v)) onChange(v);
+        if (/^#[0-9a-fA-F]{6}$/.test(v)) {
+            onChange(v);
+            setHsb(hexToHsb(v));
+        }
     };
 
     return (
         <div className={styles.colorPicker} ref={ref}>
-            <button className={styles.colorSwatch} style={{ background: value }} onClick={() => setOpen(!open)}>
-                {label && <span className={styles.colorLabel}>{label}</span>}
-            </button>
+            <button className={styles.colorSwatch} style={{ background: value }} onClick={() => setOpen(!open)} />
             {open && (
                 <div className={styles.colorPopover}>
-                    <div className={styles.colorPresets}>
-                        {PRESETS.map(c => (
-                            <button key={c} className={`${styles.presetDot} ${c === value ? styles.presetDotActive : ''}`}
-                                style={{ background: c }}
-                                onClick={() => { onChange(c); setHex(c); }} />
-                        ))}
-                    </div>
+                    {/* SB Panel */}
+                    <canvas ref={sbCanvasRef} width={200} height={150} className={styles.sbCanvas}
+                        onMouseDown={(e) => { draggingSB.current = true; updateFromSB(e); }} />
+                    {/* SB cursor */}
+                    <div className={styles.sbCursor} style={{
+                        left: `${hsb.s * 100}%`,
+                        top: `${(1 - hsb.b) * 100}%`,
+                        borderColor: hsb.b > 0.5 ? '#000' : '#fff'
+                    }} />
+                    {/* Hue strip */}
+                    <canvas ref={hueCanvasRef} width={200} height={14} className={styles.hueStrip}
+                        onMouseDown={(e) => { draggingHue.current = true; updateFromHue(e); }} />
+                    {/* Hue cursor */}
+                    <div className={styles.hueCursor} style={{ left: `${(hsb.h / 360) * 100}%` }} />
+                    {/* Hex input */}
                     <input className={styles.hexInput} value={hex} onChange={e => handleHex(e.target.value)}
                         placeholder="#000000" spellCheck={false} />
                 </div>
